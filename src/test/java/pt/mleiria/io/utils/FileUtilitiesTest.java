@@ -20,7 +20,7 @@ class FileUtilitiesTest {
     void load() {
         try {
             final List<double[]> data = FileUtilities.load(
-                    classLoader.getResource("house_prices.txt").getPath(),
+                    Objects.requireNonNull(classLoader.getResource("house_prices.txt")).getPath(),
                     strToStrArr.andThen(strArrToDbl));
             assertFalse(data.isEmpty());
         } catch (Exception e) {
