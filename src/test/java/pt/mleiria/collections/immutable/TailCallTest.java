@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.function.Function;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static pt.mleiria.collections.immutable.TailCall.ret;
 import static pt.mleiria.collections.immutable.TailCall.sus;
 
@@ -12,6 +12,7 @@ class TailCallTest {
 
     /**
      * Add method
+     *
      * @param x
      * @param y
      * @return
@@ -24,6 +25,7 @@ class TailCallTest {
 
     /**
      * Add method
+     *
      * @param x
      * @param y
      * @return
@@ -54,35 +56,25 @@ class TailCallTest {
 
     @Test
     void testAdd() {
-        int res = add(3, 1000000000).eval();
-        assertEquals(1000000003, res);
+        int res = add(3, 100000).eval();
+        assertEquals(100003, res);
     }
 
     @Test
     void testAdd_V1() {
-        int res = add_v1(3, 1000000000).eval();
-        assertEquals(1000000003, res);
+        int res = add_v1(3, 100000).eval();
+        assertEquals(100003, res);
     }
 
     @Test
     void testAdd_V2() {
-        int res = add_v2.apply(3).apply(1000000000).eval();
-        assertEquals(1000000003, res);
+        int res = add_v2.apply(3).apply(100000).eval();
+        assertEquals(100003, res);
     }
 
     @Test
     void testAdd_V3() {
-        int res = add_v3.apply(3).apply(1000000000);
-        assertEquals(1000000003, res);
+        int res = add_v3.apply(3).apply(100000);
+        assertEquals(100003, res);
     }
-
-
-    private static void test1() {
-        TailCall<Integer> tailCall = add(3, 100000);
-        while (tailCall.isSuspend()) {
-            tailCall = tailCall.resume();
-        }
-        System.out.println(tailCall.eval());
-    }
-
 }

@@ -1,6 +1,7 @@
 package pt.mleiria.io.utils;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.DoubleConsumer;
 import java.util.function.Function;

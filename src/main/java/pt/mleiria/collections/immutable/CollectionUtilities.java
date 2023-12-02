@@ -261,6 +261,15 @@ public class CollectionUtilities {
         return unfold(start, x -> x + 1, x -> x < end);
     }
 
+    /**
+     * Generates a list by repeatedly applying the given function to the seed value,
+     * until the predicate function returns false.
+     *
+     * @param  seed  the initial value to start the list generation
+     * @param  f     the function that transforms the seed value to the next value
+     * @param  p     the predicate function that determines when to stop the generation
+     * @return       the generated list
+     */
 
     public static <T> List<T> unfold(T seed, Function<T, T> f, Function<T, Boolean> p) {
         return unfoldTailRec(list(), seed, f, p).eval();

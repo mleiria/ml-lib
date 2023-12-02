@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.Function;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -48,7 +49,7 @@ public class FileUtilities {
                 }
             }
         } catch (final IOException x) {
-            LOG.severe(x.getMessage());
+            LOG.log(Level.SEVERE, x.getMessage(), x);
         }
         return CollectionUtilities.list(data);
     }
@@ -136,7 +137,15 @@ public class FileUtilities {
                 processFiles((BufferedReader br) -> br.lines().collect(Collectors.joining()), filePath);
     }
 
-    private String processFiles(final BufferedReaderProcessor p, final String filePath) {
+    public static String loadFileFromResourceToString(final String filePath){
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        return
+                processFiles((BufferedReader br) -> br.lines().collect(Collectors.joining()),
+                        Objects.requireNonNull(classLoader.getResource(filePath)).getFile());
+    }
+
+
+    private static String processFiles(final BufferedReaderProcessor p, final String filePath) {
         try (final BufferedReader br = new BufferedReader((new FileReader(filePath)))) {
             return p.process(br);
         } catch (IOException e) {
