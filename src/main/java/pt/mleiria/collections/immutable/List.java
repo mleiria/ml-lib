@@ -15,6 +15,14 @@ public abstract class List<A> {
 
     public abstract List<A> dropWhile(Function<A, Boolean> f);
 
+    public abstract List<A> reverse();
+
+    public abstract List<A> init();
+
+    public abstract int length();
+
+    public abstract <B> B foldLeft(B identity, Function<B, Function<A, B>> f);
+
     public abstract boolean isEmpty();
 
     public abstract List<A> setHead(A head);
@@ -60,6 +68,25 @@ public abstract class List<A> {
         }
 
         @Override
+        public List<A> reverse() {
+            return this;
+        }
+
+        @Override
+        public List<A> init() {
+            throw new IllegalStateException("init called on an empty list");
+        }
+
+        public <B> B foldLeft(B identity, Function<B, Function<A, B>> f) {
+            return identity;
+        }
+
+        @Override
+        public int length() {
+            return 0;
+        }
+
+        @Override
         public String toString() {
             return "[NIL]";
         }
@@ -97,11 +124,41 @@ public abstract class List<A> {
         }
 
         private TailCall<List<A>> dropWhile(List<A> list, Function<A, Boolean> f) {
-            return f.apply(list.head())
-                    ? ret(list)
-                    : sus(() -> dropWhile(list.tail(), f));
+            return !list.isEmpty() && f.apply(list.head())
+                    ? sus(() -> dropWhile(list.tail(), f))
+                    : ret(list);
         }
 
+        public <B> B foldLeft(B identity, Function<B, Function<A, B>> f) {
+            return foldLeft(this, identity, f).eval();
+        }
+
+        private <B> TailCall<B> foldLeft(List<A> list, B acc, Function<B, Function<A, B>> f) {
+            return list.isEmpty()
+                    ? ret(acc)
+                    : sus(() -> (foldLeft(list.tail(), f.apply(acc).apply(list.head()), f)));
+        }
+
+        @Override
+        public List<A> reverse() {
+            return reverse(list(), this).eval();
+        }
+
+        private TailCall<List<A>> reverse(List<A> acc, List<A> list) {
+            return list.isEmpty()
+                    ? ret(acc)
+                    : sus(() -> reverse(new Cons<>(list.head(), acc), list.tail()));
+        }
+
+        @Override
+        public List<A> init() {
+            return reverse().tail().reverse();
+        }
+
+        @Override
+        public int length() {
+            return foldLeft(0, b -> a -> b + 1);
+        }
 
         private TailCall<List<A>> drop(List<A> list, int acc) {
             return acc == 0 || list.isEmpty()
@@ -142,7 +199,14 @@ public abstract class List<A> {
     public static <A> List<A> list() {
         return NIL;
     }
-
+/*
+    public static <A, B> B foldRight(List<A> list, B n, Function<A, Function<B, B>> f) {
+        return
+                list.isEmpty()
+                        ? n
+                        : f.apply(list.head()).apply(foldRight(list.tail(), n, f));
+    }
+*/
     /**
      * Creates a new list by adding the specified element at the beginning of the current list.
      *
