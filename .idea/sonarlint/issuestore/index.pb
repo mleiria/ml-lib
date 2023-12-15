@@ -10,8 +10,6 @@ h
 Ksrc/test/java/pt/mleiria/collections/immutable/CollectionUtilitiesTest.java,b/0/b057f767dd8b801e1f416ae075771cff9dee43ca
 \
 ,src/main/java/pt/mleiria/core/StopWatch.java,f/7/f7a046709b71eb57df306307e3175a246f80b553
-e
-5src/main/java/pt/mleiria/io/utils/TableGenerator.java,1/d/1d2694cd7c1677fbc40b012a2e1aae43e94acf21
 S
 #.idea/sonarlint/issuestore/index.pb,9/f/9fe84ebb15faf917b7def6236dba604453cc61e0
 ]

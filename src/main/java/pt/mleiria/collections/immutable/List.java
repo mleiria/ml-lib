@@ -133,10 +133,11 @@ public abstract class List<A> {
             return foldLeft(this, identity, f).eval();
         }
 
+
         private <B> TailCall<B> foldLeft(List<A> list, B acc, Function<B, Function<A, B>> f) {
             return list.isEmpty()
                     ? ret(acc)
-                    : sus(() -> (foldLeft(list.tail(), f.apply(acc).apply(list.head()), f)));
+                    : sus(() -> foldLeft(list.tail(), f.apply(acc).apply(list.head()), f));
         }
 
         @Override
@@ -155,9 +156,14 @@ public abstract class List<A> {
             return reverse().tail().reverse();
         }
 
+        /**
+         * Inefficient method
+         *
+         * @return
+         */
         @Override
         public int length() {
-            return foldLeft(0, b -> a -> b + 1);
+            return foldLeft(0, x -> ignore -> x + 1);
         }
 
         private TailCall<List<A>> drop(List<A> list, int acc) {
@@ -199,14 +205,27 @@ public abstract class List<A> {
     public static <A> List<A> list() {
         return NIL;
     }
-/*
+
+    /**
+     * Inefficient
+     *
+     * @param list
+     * @param n
+     * @param f
+     * @param <A>
+     * @param <B>
+     * @return
+     */
     public static <A, B> B foldRight(List<A> list, B n, Function<A, Function<B, B>> f) {
         return
                 list.isEmpty()
                         ? n
                         : f.apply(list.head()).apply(foldRight(list.tail(), n, f));
     }
-*/
+
+
+
+
     /**
      * Creates a new list by adding the specified element at the beginning of the current list.
      *
